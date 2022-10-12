@@ -1,5 +1,18 @@
 class SQL {
-  constructor(tableName, SQLType = 'create', { columns = [] } = {}) {
+  constructor(
+    tableName,
+    SQLType = 'create',
+    {
+      columns = [
+        {
+          id: 1,
+          name: 'id',
+          type: 'INT',
+          args: ['NOT NULL'],
+        },
+      ],
+    } = {},
+  ) {
     this.tableName = tableName;
     this.SQLType = SQLType;
     this.columns = columns;
@@ -42,11 +55,13 @@ class SQLObject {
 
   generateSQL() {
     if (this.SQL.SQLType === 'create') {
-      const sqlInBrackets = this.SQL.columns
-        .map(
-          (column) => `${column.name} ${column.type} ${column.args.join(' ')}`,
-        )
-        .join(', ');
+      const sqlInBrackets =
+        this.SQL.columns
+          .map(
+            (column) =>
+              `${column.name} ${column.type} ${column.args.join(' ')}`,
+          )
+          .join(', ') + ', PRIMARY KEY (id)';
 
       const SQLString = `CREATE TABLE ${this.SQL.tableName} (${sqlInBrackets})`;
       return SQLString;
